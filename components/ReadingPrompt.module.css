@@ -1,0 +1,15 @@
+.prompt {
+  width: 100%;
+  border: 0;
+  resize: none;
+  font-size: 14px;
+  flex: 1;
+}
+
+.prompt:focus {
+  outline: none;
+}
+
+.generate_button {
+  margin-left: auto;
+}

@@ -3,14 +3,10 @@
 @tailwind utilities;
 
 :root {
-  --background: #121212;
-  --foreground: #ededed;
+  --background: #ffffff;
 }
 
 body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
-}
-
-.container {
 }

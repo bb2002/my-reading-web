@@ -1,3 +1,4 @@
+import "@ant-design/v5-patch-for-react-19";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -29,7 +30,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Header />
-        <div className="container">{children}</div>
+        <div className="w-full flex justify-center">
+          <main className="w-full max-w-[480px] flex items-center">
+            {children}
+          </main>
+        </div>
       </body>
     </html>
   );
