@@ -6,10 +6,10 @@ import { BookOutlined, EditOutlined, OpenAIOutlined } from "@ant-design/icons";
 export default function Home() {
   return (
     <div className="my-16 w-full flex flex-col">
-      <p className="text-5xl font-pretendard font-bold mx-auto m-2">
+      <p className="text-5xl font-pretendard font-bold mx-auto m-2 text-[#1F1F1F]">
         원하는 주제를
       </p>
-      <p className="text-5xl font-pretendard font-bold mx-auto m-2">
+      <p className="text-5xl font-pretendard font-bold mx-auto m-2 text-[#1F1F1F]">
         <span className="text-[#F39C12]">JLPT</span> 독해 처럼
       </p>
 
@@ -31,8 +31,8 @@ export default function Home() {
           style={{ marginBottom: 8 }}
         />
         <LinkedCard
-          title="예문과 출제빈도 파악"
-          line1="단어를 고르면 예문과 출제빈도를 파악해줘요."
+          title="단어장으로 복습"
+          line1="단어장에 단어를 저장하고, 예문과 출제 경향도 알아봐요."
           icon={<BookOutlined />}
         />
       </div>

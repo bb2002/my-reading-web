@@ -24,7 +24,9 @@ export default function LinkedCard({
         <Card style={{ ...style, cursor: "pointer", height: 106 }}>
           <div className="flex mb-2">
             {icon}
-            <h4 className="ml-2 font-pretendard text-[#1c1c1c]">{title}</h4>
+            <h4 className="ml-2 font-pretendard text-[#1c1c1c] font-semibold">
+              {title}
+            </h4>
           </div>
           <p className="font-pretendard text-sm text-[#707070]">{line1}</p>
           <p className="font-pretendard text-sm text-[#707070]">{line2}</p>
@@ -37,7 +39,9 @@ export default function LinkedCard({
     <Card style={{ ...style, height: 106 }}>
       <div className="flex mb-2">
         {icon}
-        <h4 className="ml-2 font-pretendard text-[#1c1c1c]">{title}</h4>
+        <h4 className="ml-2 font-pretendard text-[#1c1c1c] font-semibold">
+          {title}
+        </h4>
       </div>
       <p className="font-pretendard text-sm text-[#707070]">{line1}</p>
       <p className="font-pretendard text-sm text-[#707070]">{line2}</p>
