@@ -1,7 +1,13 @@
 import Image from "next/image";
-import { Button } from "antd";
+import LoginButton from "./buttons/LoginButton";
+import { createClient } from "@/utils/supabase/server";
 
-export default function Header() {
+export default async function Header() {
+  const supabase = await createClient();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
   return (
     <header className="w-full h-16 border-b border-b-[#DFDFDF] flex justify-center">
       <div className="w-full max-w-[480px] flex items-center justify-between mx-4">
@@ -11,7 +17,15 @@ export default function Header() {
           width="24"
           height="24"
         />
-        <Button type="text">로그인</Button>
+        {session ? (
+          <div className="text-sm">
+            <span className="mr-4 font-bold">
+              @{session.user?.user_metadata?.name}
+            </span>
+          </div>
+        ) : (
+          <LoginButton />
+        )}
       </div>
     </header>
   );

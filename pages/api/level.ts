@@ -1,4 +1,4 @@
-import { supabase } from "@/utils/supabase";
+import { supabase } from "@/utils/supabase/client";
 import { Database } from "@/utils/types/Database";
 import type { NextApiRequest, NextApiResponse } from "next";
 
