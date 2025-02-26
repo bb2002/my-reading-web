@@ -1,13 +1,22 @@
 "use server";
 
-export async function createReading(formData: FormData) {
-  const level = formData.get("level");
-  const length = formData.get("length");
-  const originUrl = formData.get("originUrl");
-  const guestId = formData.get("guestId");
+import { CreateReadingDto } from "@/utils/dto/CreateReadingDto";
+import { HttpType } from "@/utils/types/HttpType";
+import { validate } from "class-validator";
 
-  console.log(level, length, originUrl, guestId);
+export async function createReading(prevState: any, formData: FormData) {
+  const dto = new CreateReadingDto();
+  dto.level = formData.get("level")?.toString() ?? "";
+  dto.length = formData.get("length")?.toString() ?? "";
+  dto.originUrl = formData.get("originUrl")?.toString() ?? "";
+  dto.guestId = formData.get("guestId")?.toString() ?? "";
 
-  // Update data
-  // Revalidate cache
+  const errors = await validate(dto);
+  if (errors.length > 0) {
+    return {
+      code: 400,
+      message: "ValidationFailed",
+      detail: JSON.stringify(errors),
+    } as HttpType;
+  }
 }

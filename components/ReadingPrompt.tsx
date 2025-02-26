@@ -1,7 +1,7 @@
 "use client";
-import { Button, Dropdown, Space } from "antd";
+import { Alert, Button, Dropdown, Space } from "antd";
 import { DownOutlined, SendOutlined } from "@ant-design/icons";
-import { useState } from "react";
+import { useActionState, useState } from "react";
 import {
   LengthRow,
   LevelRow,
@@ -9,6 +9,7 @@ import {
 } from "@/utils/types/ReadingPromptOptions";
 import { createReading } from "@/app/reading/actions";
 import { useGuest } from "@/hooks/useGuest";
+import { HttpType, HttpTypeInitialState } from "@/utils/types/HttpType";
 
 export default function ReadingPrompt() {
   const [selectedLevel, setSelectedLevel] = useState<LevelRow>(LevelRows[0]);
@@ -16,10 +17,15 @@ export default function ReadingPrompt() {
     LevelRows[0].length[0]
   );
   const [originUrl, setOriginUrl] = useState<string>("");
+
   const { guestId } = useGuest();
+  const [state, formAction, pending] = useActionState(
+    createReading,
+    HttpTypeInitialState
+  );
 
   return (
-    <div className="w-full h-32 border border-[#e5e5e5] rounded-2xl mt-16 shadow-md p-4 flex flex-col">
+    <div className="w-full min-h-32 border border-[#e5e5e5] rounded-2xl mt-16 shadow-md p-4 flex flex-col">
       <textarea
         className="w-full border-0 resize-none text-sm flex-1 focus:outline-none"
         cols={2}
@@ -70,7 +76,7 @@ export default function ReadingPrompt() {
             </Space>
           </Button>
         </Dropdown>
-        <form action={createReading} className="ml-auto">
+        <form action={formAction} className="ml-auto">
           <input type="hidden" name="level" value={selectedLevel.key} />
           <input type="hidden" name="length" value={selectedLength.key} />
           <input type="hidden" name="originUrl" value={originUrl} />
@@ -82,6 +88,15 @@ export default function ReadingPrompt() {
           </button>
         </form>
       </div>
+
+      {state?.message && (
+        <Alert
+          message={state.message}
+          type="error"
+          showIcon
+          style={{ marginTop: 16 }}
+        />
+      )}
     </div>
   );
 }
