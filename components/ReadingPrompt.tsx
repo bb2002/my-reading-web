@@ -1,104 +1,87 @@
 "use client";
-import { Button, Dropdown, MenuProps, Skeleton, Space } from "antd";
-import styles from "./ReadingPrompt.module.css";
-import { DownOutlined, UploadOutlined } from "@ant-design/icons";
-import { useEffect, useState } from "react";
-import { fetcher } from "@/utils/fetcher";
-import useSWR from "swr";
-import { Database } from "@/utils/types/Database";
-
-type LevelRow = Database["public"]["Tables"]["levels"]["Row"];
-type LengthRow = {
-  key: string;
-  label: string;
-};
+import { Button, Dropdown, Space } from "antd";
+import { DownOutlined, SendOutlined } from "@ant-design/icons";
+import { useState } from "react";
+import {
+  LengthRow,
+  LevelRow,
+  LevelRows,
+} from "@/utils/types/ReadingPromptOptions";
+import { createReading } from "@/app/reading/actions";
+import { useGuest } from "@/hooks/useGuest";
 
 export default function ReadingPrompt() {
-  const { data, error, isLoading } = useSWR<LevelRow[]>("/api/level", fetcher);
-  const [levelMenuItems, setLevelMenuItems] = useState<MenuProps["items"]>([]);
-  const [selectedLevel, setSelectedLevel] = useState<LevelRow | undefined>();
-  const [selectedLength, setSelectedLength] = useState<LengthRow | undefined>();
-
-  const lengthMenuItems: LengthRow[] = [
-    {
-      key: "short",
-      label: "단문",
-    },
-    {
-      key: "medium",
-      label: "중문",
-    },
-    {
-      key: "long",
-      label: "장문",
-    },
-  ];
-
-  useEffect(() => {
-    if (data) {
-      setLevelMenuItems(
-        data.map((d: LevelRow) => ({
-          label: d.label,
-          key: d.id,
-        }))
-      );
-      setSelectedLevel(data[0]);
-      setSelectedLength(lengthMenuItems[0]);
-    }
-  }, [data]);
+  const [selectedLevel, setSelectedLevel] = useState<LevelRow>(LevelRows[0]);
+  const [selectedLength, setSelectedLength] = useState<LengthRow>(
+    LevelRows[0].length[0]
+  );
+  const [originUrl, setOriginUrl] = useState<string>("");
+  const { guestId } = useGuest();
 
   return (
     <div className="w-full h-32 border border-[#e5e5e5] rounded-2xl mt-16 shadow-md p-4 flex flex-col">
-      {isLoading ? (
-        <Skeleton paragraph={{ rows: 2 }} />
-      ) : (
-        <>
-          <textarea
-            className={styles.prompt}
-            cols={2}
-            placeholder="https://www3.nhk.or.jp/news/html/20250223/k10014730811000.html"
-          />
-          <div className="flex">
-            <Dropdown
-              menu={{
-                items: levelMenuItems,
-                onClick: (e) =>
-                  setSelectedLevel(data?.find((d) => d.id === Number(e.key))),
-              }}
-            >
-              <Button>
-                <Space>
-                  {selectedLevel?.label}
-                  <DownOutlined />
-                </Space>
-              </Button>
-            </Dropdown>
-            &nbsp;
-            <Dropdown
-              menu={{
-                items: lengthMenuItems,
-                onClick: (e) =>
-                  setSelectedLength(
-                    lengthMenuItems.find((d) => d.key === e.key)
-                  ),
-              }}
-            >
-              <Button>
-                <Space>
-                  {selectedLength?.label}
-                  <DownOutlined />
-                </Space>
-              </Button>
-            </Dropdown>
-            <Button
-              type="primary"
-              shape="circle"
-              icon={<UploadOutlined />}
-              style={{ marginLeft: "auto" }}
-            />
-          </div>
-        </>
-      )}
+      <textarea
+        className="w-full border-0 resize-none text-sm flex-1 focus:outline-none"
+        cols={2}
+        placeholder="https://www3.nhk.or.jp/news/html/20250223/k10014730811000.html"
+        onChange={(e) => setOriginUrl(e.target.value)}
+        value={originUrl}
+      />
+      <div className="flex">
+        <Dropdown
+          menu={{
+            items: LevelRows.map((level) => ({
+              label: level.label,
+              key: level.key,
+            })),
+            onClick: (e) => {
+              const newLevel =
+                LevelRows.find((level) => level.key === e.key) ?? LevelRows[0];
+              setSelectedLevel(newLevel);
+              setSelectedLength(newLevel.length[0]);
+            },
+          }}
+        >
+          <Button>
+            <Space>
+              {selectedLevel?.label}
+              <DownOutlined />
+            </Space>
+          </Button>
+        </Dropdown>
+        &nbsp;
+        <Dropdown
+          menu={{
+            items: selectedLevel.length.map((l) => ({
+              label: l.label,
+              key: l.key,
+            })),
+            onClick: (e) =>
+              setSelectedLength(
+                selectedLevel.length.find((l) => l.key === e.key) ??
+                  selectedLevel.length[0]
+              ),
+          }}
+        >
+          <Button>
+            <Space>
+              {selectedLength?.label}
+              <DownOutlined />
+            </Space>
+          </Button>
+        </Dropdown>
+        <form action={createReading} className="ml-auto">
+          <input type="hidden" name="level" value={selectedLevel.key} />
+          <input type="hidden" name="length" value={selectedLength.key} />
+          <input type="hidden" name="originUrl" value={originUrl} />
+          <input type="hidden" name="guestId" value={guestId} />
+          <button type="submit">
+            <div className="w-8 h-8 bg-[#F39C12] rounded-full flex items-center justify-center shadow">
+              <SendOutlined style={{ color: "white" }} />
+            </div>
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
