@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsIn, IsUrl, IsUUID } from "class-validator";
+import { IsNotEmpty, IsIn, IsUrl, IsUUID, IsIP, IsOptional } from "class-validator";
 import { LengthRowJLPT, LevelRows } from "../types/ReadingPromptOptions";
 
 export class CreateReadingDto {
@@ -21,4 +21,8 @@ export class CreateReadingDto {
   @IsNotEmpty({ message: "guestId는 필수 값입니다." })
   @IsUUID("4", { message: "guestId는 유효한 UUID v4 형식이어야 합니다." })
   guestId: string;
+
+  @IsOptional()
+  @IsIP()
+  ipAddress?: string;
 }

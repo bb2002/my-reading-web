@@ -1,24 +1,18 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { Database } from "../types/database.types";
+import { NextApiRequest } from "next";
 
-type CreateClientProps = {
-  admin?: boolean;
-};
-
-export async function createClient(props?: CreateClientProps) {
+export async function createClient() {
   const cookieStore = await cookies();
-  console.log(process.env.SUPABASE_SERVICE_ROLE_KEY);
+  const { NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY } = process.env;
 
   return createServerClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL as string,
-    process.env.SUPABASE_SERVICE_ROLE_KEY as string,
+    NEXT_PUBLIC_SUPABASE_URL as string,
+    NEXT_PUBLIC_SUPABASE_ANON_KEY as string,
     {
       cookies: {
         getAll() {
-          if (props?.admin) {
-            return [];
-          }
           return cookieStore.getAll();
         },
         setAll(cookiesToSet) {
