@@ -8,7 +8,6 @@ import {
   LevelRows,
 } from "@/utils/types/ReadingPromptOptions";
 import { createReading } from "@/app/reading/actions";
-import { useGuest } from "@/hooks/useGuest";
 import ActionType from "@/utils/types/ActionType";
 
 export default function ReadingPrompt() {
@@ -17,9 +16,10 @@ export default function ReadingPrompt() {
     LevelRows[0].length[0]
   );
   const [originUrl, setOriginUrl] = useState<string>("");
-  const { guestId } = useGuest();
 
-  const [state, action, pending] = useActionState(createReading, { message: '' } as ActionType)
+  const [state, action, pending] = useActionState(createReading, {
+    message: "",
+  } as ActionType);
 
   return (
     <div className="w-full min-h-32 border border-[#e5e5e5] rounded-2xl mt-16 shadow-md p-4 flex flex-col">
@@ -77,12 +77,13 @@ export default function ReadingPrompt() {
           <input type="hidden" name="level" value={selectedLevel.key} />
           <input type="hidden" name="length" value={selectedLength.key} />
           <input type="hidden" name="originUrl" value={originUrl} />
-          <input type="hidden" name="guestId" value={guestId} />
           <button type="submit" disabled={pending}>
             <div className="w-8 h-8 bg-[#F39C12] rounded-full flex items-center justify-center shadow">
-              {
-                pending ? <LoadingOutlined style={{ color: "white" }} /> : <SendOutlined style={{ color: "white" }} />
-              }
+              {pending ? (
+                <LoadingOutlined style={{ color: "white" }} />
+              ) : (
+                <SendOutlined style={{ color: "white" }} />
+              )}
             </div>
           </button>
         </form>

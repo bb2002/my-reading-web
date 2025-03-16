@@ -16,6 +16,7 @@
     "incremental": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "checkJs": true,
     "plugins": [
       {
         "name": "next"
